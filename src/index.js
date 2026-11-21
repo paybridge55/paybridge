@@ -1,37 +1,37 @@
-// PAYBRIDGE - Backend entry (Phase 1: health check only)
-// Secret keys must only live in Cloudflare Secrets, never here.
-
-const JSON_HEADERS = {
-  "content-type": "application/json; charset=utf-8",
-  "cache-control": "no-store",
-  "x-content-type-options": "nosniff",
-};
-
-function json(data, status = 200) {
-  return new Response(JSON.stringify(data), { status, headers: JSON_HEADERS });
-}
+import { json, errorJson } from "./lib/response.js";
+import { signup, login, logout, me } from "./routes/auth.js";
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    const path = url.pathname;
+    const method = request.method;
 
-    if (url.pathname === "/api/v1/health") {
-      return json({
-        status: "ok",
-        service: "paybridge",
-        mode: "test",
-        live_payments: false,
-        time: new Date().toISOString(),
-      });
+    if (!path.startsWith("/api/")) {
+      return env.ASSETS.fetch(request);
     }
 
-    if (url.pathname.startsWith("/api/")) {
-      return json(
-        { error: { code: "not_found", message: "Endpoint not found." } },
-        404
-      );
-    }
+    try {
+      if (path === "/api/v1/health" && method === "GET") {
+        return json({ status: "ok", service: "paybridge", mode: "test" });
+      }
 
-    return env.ASSETS.fetch(request);
+      if (path === "/api/v1/auth/signup" && method === "POST") {
+        return await signup(request, env);
+      }
+      if (path === "/api/v1/auth/login" && method === "POST") {
+        return await login(request, env);
+      }
+      if (path === "/api/v1/auth/logout" && method === "POST") {
+        return await logout(request, env);
+      }
+      if (path === "/api/v1/auth/me" && method === "GET") {
+        return await me(request, env);
+      }
+
+      return errorJson("NOT_FOUND", "यह API मौजूद नहीं है।", 404);
+    } catch (e) {
+      return errorJson("SERVER_ERROR", "सर्वर में गड़बड़ी हुई। बाद में कोशिश करें।", 500);
+    }
   },
 };
