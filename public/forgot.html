@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Password भूल गए | PayBridge</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <main class="auth-wrap">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#7c3aed"/>
+        <path d="M7 20h18M7 20c0-6 4-9 9-9s9 3 9 9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+      </svg>
+      <span>PayBridge</span>
+    </div>
+
+    <div class="card">
+      <span class="badge-test">Demo / Coming soon</span>
+      <h1>Password भूल गए?</h1>
+      <p class="sub">Password Reset की सुविधा अभी उपलब्ध नहीं है।</p>
+
+      <div class="alert info show" role="status">
+        अभी Email भेजने की सेवा जुड़ी नहीं है, इसलिए Password Reset चालू नहीं है। यह सुविधा बाद में जोड़ी जाएगी।
+      </div>
+
+      <form id="forgot-form" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" maxlength="254" autocomplete="email">
+        </div>
+        <button id="submit" class="btn" type="submit">Reset Link भेजें (Demo)</button>
+      </form>
+
+      <div id="result" class="alert" role="status"></div>
+
+      <div class="links">
+        <p><a href="/login.html">Login पर वापस जाएँ</a></p>
+        <p><a href="/signup.html">नया खाता बनाएँ</a></p>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script>
+    (function () {
+      var form = document.getElementById("forgot-form");
+      var result = document.getElementById("result");
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        PB.showAlert(result, "info", "यह सुविधा अभी Demo है। कोई Email नहीं भेजा गया।");
+      });
+    })();
+  </script>
+</body>
+</html>
