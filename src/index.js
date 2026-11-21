@@ -1,5 +1,6 @@
 import { json, errorJson } from "./lib/response.js";
 import { signup, login, logout, me } from "./routes/auth.js";
+import { listTransactions, createDemoTransaction } from "./routes/transactions.js";
 import { getSessionMerchant } from "./lib/session.js";
 
 export default {
@@ -56,6 +57,13 @@ export default {
       }
       if (path === "/api/v1/auth/me" && method === "GET") {
         return await me(request, env);
+      }
+
+      if (path === "/api/v1/transactions" && method === "GET") {
+        return await listTransactions(request, env);
+      }
+      if (path === "/api/v1/transactions/demo" && method === "POST") {
+        return await createDemoTransaction(request, env);
       }
 
       return errorJson("NOT_FOUND", "यह API मौजूद नहीं है।", 404);
