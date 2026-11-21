@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PayBridge - Payment Infrastructure for Developers</title>
+  <meta name="description" content="PayBridge is a developer-friendly payment infrastructure platform. Currently in Test Mode.">
+  <meta name="theme-color" content="#1e1b4b">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></symbol>
+  <symbol id="i-webhook" viewBox="0 0 24 24"><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><circle cx="12" cy="6" r="3"/><path d="m12 9-4 6M15 18H9m6-9 3 6"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M16 7l3 3"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6L4 20a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1l-6-11V3"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+</svg>
+
+<header class="nav" id="top">
+  <div class="container nav-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark"><svg class="ic"><use href="#i-card"/></svg></span>PayBridge
+    </a>
+    <nav class="nav-links" id="navLinks" aria-label="Main">
+      <a href="#features">Features</a>
+      <a href="#developers">Developers</a>
+      <a href="#security">Security</a>
+      <a href="#testmode">Test Mode</a>
+      <a href="#pricing">Pricing</a>
+      <a class="nav-mobile-only btn btn-ghost" href="/login.html">Log in</a>
+      <a class="nav-mobile-only btn btn-primary" href="/signup.html">Get Started</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-ghost nav-desktop-only" href="/login.html">Log in</a>
+      <a class="btn btn-primary nav-desktop-only" href="/signup.html">Get Started</a>
+      <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+        <svg class="ic" id="menuIcon"><use href="#i-menu"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <p class="pill"><svg class="ic ic-sm"><use href="#i-flask"/></svg>Test Mode only</p>
+        <h1>Payment infrastructure, built for developers.</h1>
+        <p class="lead">Create orders, host checkout, track transactions and receive webhooks with one clean API. Build and test your integration today.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary btn-lg" href="/signup.html">Get Started <svg class="ic ic-sm"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-outline btn-lg" href="/docs.html">View Documentation</a>
+        </div>
+        <div class="notice">
+          <svg class="ic"><use href="#i-info"/></svg>
+          <p><strong>Test Payment Platform.</strong> Real payment processing is not available yet. No real money is moved and no settlements are made.</p>
+        </div>
+      </div>
+
+      <div class="card-preview" aria-hidden="true">
+        <div class="cp-head"><span>Order PB_ORDER_100001</span><span class="badge badge-warn">TEST</span></div>
+        <div class="cp-amount">&#8377;1,499.00</div>
+        <p class="muted">Demo Store - Annual plan</p>
+        <div class="cp-row"><span>Status</span><span class="badge badge-ok">SUCCESS</span></div>
+        <div class="cp-row"><span>Method</span><span>Test Card</span></div>
+        <div class="cp-row"><span>Payment ID</span><span class="mono">PB_PAY_100001</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="container">
+      <h2>Everything you need to accept payments</h2>
+      <p class="section-sub">A complete toolkit for merchants and developers. Features marked Demo are prototypes.</p>
+      <div class="grid">
+        <article class="feature"><span class="f-icon"><svg class="ic"><use href="#i-box"/></svg></span><h3>Orders API</h3><p>Create and track orders with unique IDs and a clear lifecycle.</p></article>
+        <article class="feature"><span class="f-icon"><svg class="ic"><use href="#i-card"/></svg></span><h3>Hosted Checkout</h3><p>A clean, mobile-first checkout page with success and failure screens.</p></article>
+        <article class="feature"><span class="f-icon"><svg class="ic"><use href="#i-link"/></svg></span><h3>Payment Links</h3><p>Share a link and collect test payments without writing code.</p></article>
+        <article class="feature"><span class="f-icon"><svg class="ic"><use href="#i-webhook"/></svg></span><h3>Webhooks</h3><p>Signed events for payment success, failure and pending states.</p></article>
+        <article class="feature"><span class="f-icon"><svg class="ic"><use href="#i-chart"/></svg></span><h3>Analytics</h3><p>Transaction history, filters and a merchant dashboard overview.</p></article>
+        <article class="feature"><span class="f-icon"><svg class="ic"><use href="#i-repeat"/></svg></span><h3>Subscriptions <em class="tag">Demo</em></h3><p>Plan and billing-cycle management prototype. No automatic charging.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-dark" id="developers">
+    <div class="container dev-grid">
+      <div>
+        <h2>One API. Clear responses.</h2>
+        <p class="section-sub">Authenticate with a key, create an order, send your customer to checkout. Status is always confirmed on the server.</p>
+        <ul class="checks">
+          <li><svg class="ic ic-sm"><use href="#i-check"/></svg>REST endpoints under <span class="mono">/api/v1</span></li>
+          <li><svg class="ic ic-sm"><use href="#i-check"/></svg>Consistent JSON errors</li>
+          <li><svg class="ic ic-sm"><use href="#i-check"/></svg>Test and Live modes kept separate</li>
+        </ul>
+        <a class="btn btn-light" href="/docs.html">Read the docs</a>
+      </div>
+      <pre class="code" aria-label="Example API request"><code>curl -X POST https://your-domain/api/v1/orders \
+  -H "Authorization: Bearer pb_test_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 149900,
+    "currency": "INR",
+    "reference": "INV-1001"
+  }'
+
+# Response
+{
+  "id": "PB_ORDER_100001",
+  "status": "CREATED",
+  "mode": "test"
+}</code></pre>
+    </div>
+  </section>
+
+  <section class="section" id="security">
+    <div class="container">
+      <h2>Security first, by design</h2>
+      <p class="section-sub">Payment software needs strict rules. These are built into the architecture.</p>
+      <div class="grid">
+        <article class="feature"><span class="f-icon"><svg class="ic"><use href="#i-key"/></svg></span><h3>Server-side secrets</h3><p>Secret keys never appear in frontend code or in the repository.</p></article>
+        <article class="feature"><span class="f-icon"><svg class="ic"><use href="#i-shield"/></svg></span><h3>Server-verified status</h3><p>A redirect or URL change never marks a payment as successful.</p></article>
+        <article class="feature"><span class="f-icon"><svg class="ic"><use href="#i-users"/></svg></span><h3>Merchant isolation</h3><p>Each merchant can only access their own records.</p></article>
+        <article class="feature"><span class="f-icon"><svg class="ic"><use href="#i-lock"/></svg></span><h3>No card data stored</h3><p>We never store card numbers, CVV or bank credentials.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tint" id="testmode">
+    <div class="container narrow">
+      <h2>About Test Mode</h2>
+      <p class="section-sub">PayBridge is an early-stage platform. Here is what that means today.</p>
+      <div class="two-col">
+        <div class="panel">
+          <h3>Available now</h3>
+          <ul class="checks">
+            <li><svg class="ic ic-sm"><use href="#i-check"/></svg>Test orders and checkout</li>
+            <li><svg class="ic ic-sm"><use href="#i-check"/></svg>Simulated success and failure</li>
+            <li><svg class="ic ic-sm"><use href="#i-check"/></svg>Test API keys and webhooks</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Not available</h3>
+          <ul class="crosses">
+            <li>Real UPI, card or bank payments</li>
+            <li>Real money or settlements</li>
+            <li>Automatic recurring debit</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="pricing">
+    <div class="container narrow">
+      <h2>Pricing</h2>
+      <p class="section-sub">Simple while we are in Test Mode.</p>
+      <div class="two-col">
+        <div class="plan plan-featured">
+          <h3>Test Mode</h3>
+          <p class="price">Free</p>
+          <p class="muted">Build and test your integration.</p>
+          <ul class="checks">
+            <li><svg class="ic ic-sm"><use href="#i-check"/></svg>Orders, checkout, payment links</li>
+            <li><svg class="ic ic-sm"><use href="#i-check"/></svg>Test API keys and webhooks</li>
+            <li><svg class="ic ic-sm"><use href="#i-check"/></svg>Dashboard and analytics</li>
+          </ul>
+          <a class="btn btn-primary" href="/signup.html">Get Started</a>
+        </div>
+        <div class="plan">
+          <h3>Live Mode</h3>
+          <p class="price">Coming soon</p>
+          <p class="muted">Needs an authorized payment provider. Pricing will be announced later.</p>
+          <ul class="crosses">
+            <li>Real payment processing</li>
+            <li>Settlements and refunds</li>
+          </ul>
+          <button class="btn btn-outline" disabled>Not available</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div>
+      <a class="brand" href="/"><span class="brand-mark"><svg class="ic"><use href="#i-card"/></svg></span>PayBridge</a>
+      <p class="muted">Test Mode platform. No real payments are processed.</p>
+    </div>
+    <nav aria-label="Footer">
+      <a href="#features">Features</a>
+      <a href="#developers">Developers</a>
+      <a href="#pricing">Pricing</a>
+      <a href="/api/v1/health">API Status</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/app.js"></script>
+</body>
+  </html>
