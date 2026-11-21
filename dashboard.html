@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard | PayBridge</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <header class="dash-top">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#7c3aed"/>
+        <path d="M7 20h18M7 20c0-6 4-9 9-9s9 3 9 9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+      </svg>
+      <span>PayBridge</span>
+    </div>
+    <button id="logout" class="btn btn-outline btn-small" type="button">Logout</button>
+  </header>
+
+  <main class="dash-body">
+    <div id="loading" class="state-box">
+      <div class="spinner"></div>
+      <div>लोड हो रहा है...</div>
+    </div>
+
+    <div id="error" class="alert error" role="alert"></div>
+
+    <div id="content" style="display:none">
+      <div class="dash-card">
+        <span class="badge-test">Test Mode: असली पैसा नहीं</span>
+        <h2 id="welcome">स्वागत है</h2>
+        <p class="sub" style="color:#64748b;margin:0">आपका Merchant खाता तैयार है।</p>
+      </div>
+
+      <div class="dash-card">
+        <h2>खाते की जानकारी</h2>
+        <div class="kv"><span>Business</span><span id="v-business"></span></div>
+        <div class="kv"><span>Email</span><span id="v-email"></span></div>
+        <div class="kv"><span>Merchant ID</span><span id="v-id"></span></div>
+      </div>
+
+      <div class="dash-card">
+        <h2>आगे आने वाला</h2>
+        <p style="margin:0;color:#64748b;font-size:14px">Transactions, Orders, Payment Links, API Keys और Webhooks अगले Phases में जुड़ेंगे। <strong>Coming soon</strong></p>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script>
+    (function () {
+      var loading = document.getElementById("loading");
+      var content = document.getElementById("content");
+      var errorBox = document.getElementById("error");
+      var logoutBtn = document.getElementById("logout");
+
+      PB.me().then(function (data) {
+        var m = data.merchant;
+        document.getElementById("welcome").textContent = "स्वागत है, " + m.business_name;
+        document.getElementById("v-business").textContent = m.business_name;
+        document.getElementById("v-email").textContent = m.email;
+        document.getElementById("v-id").textContent = m.id;
+        loading.style.display = "none";
+        content.style.display = "block";
+      }).catch(function (err) {
+        if (err.code === "UNAUTHENTICATED") {
+          window.location.replace("/login.html");
+          return;
+        }
+        loading.style.display = "none";
+        PB.showAlert(errorBox, "error", err.message);
+      });
+
+      logoutBtn.addEventListener("click", function () {
+        PB.setLoading(logoutBtn, true, "रुकें...");
+        PB.logout().then(function () {
+          window.location.replace("/login.html");
+        }).catch(function (err) {
+          PB.setLoading(logoutBtn, false);
+          PB.showAlert(errorBox, "error", err.message);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
