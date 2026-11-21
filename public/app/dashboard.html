@@ -20,6 +20,12 @@
     .form-row { display:flex; flex-direction:column; gap:10px; }
     .form-row select { width:100%; padding:12px 14px; font-size:16px; border:1px solid #cbd5e1; border-radius:10px; background:#fff; color:#1e293b; }
     .empty { text-align:center; color:#64748b; padding:24px 8px; font-size:14px; }
+    .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+    .stat { background:#f5f3ff; border-radius:12px; padding:12px; min-width:0; }
+    .stat-label { font-size:12px; color:#64748b; }
+    .stat-value { font-size:20px; font-weight:700; color:#1e1b4b; margin-top:4px; word-break:break-word; }
+    .stat.ok .stat-value { color:#16a34a; }
+    .stat.bad .stat-value { color:#dc2626; }
   </style>
 </head>
 <body>
@@ -48,6 +54,29 @@
         <h2 id="welcome">स्वागत है</h2>
         <div class="kv"><span>Email</span><span id="v-email"></span></div>
         <div class="kv"><span>Merchant ID</span><span id="v-id"></span></div>
+      </div>
+
+      <div class="dash-card">
+        <h2>आँकड़े (Test)</h2>
+        <div class="stats-grid">
+          <div class="stat">
+            <div class="stat-label">कुल Transactions</div>
+            <div class="stat-value" id="st-total">0</div>
+          </div>
+          <div class="stat ok">
+            <div class="stat-label">Success</div>
+            <div class="stat-value" id="st-success">0</div>
+          </div>
+          <div class="stat bad">
+            <div class="stat-label">Failed</div>
+            <div class="stat-value" id="st-failed">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Success रकम (Test)</div>
+            <div class="stat-value" id="st-amount">&#8377;0.00</div>
+          </div>
+        </div>
+        <p style="margin:12px 0 0;color:#64748b;font-size:12px">ये आँकड़े सबसे नई 50 Test Transactions से बने हैं। असली पैसा नहीं।</p>
       </div>
 
       <div class="dash-card">
@@ -102,6 +131,25 @@
         return new Date(ts * 1000).toLocaleString("en-IN");
       }
 
+      function renderStats(items) {
+        var total = items.length;
+        var success = 0;
+        var failed = 0;
+        var successPaise = 0;
+        items.forEach(function (t) {
+          if (t.status === "SUCCESS") {
+            success += 1;
+            successPaise += Number(t.amount) || 0;
+          } else if (t.status === "FAILED") {
+            failed += 1;
+          }
+        });
+        document.getElementById("st-total").textContent = String(total);
+        document.getElementById("st-success").textContent = String(success);
+        document.getElementById("st-failed").textContent = String(failed);
+        document.getElementById("st-amount").textContent = formatAmount(successPaise);
+      }
+
       function renderTransactions(items) {
         txList.textContent = "";
         if (!items.length) {
@@ -146,7 +194,9 @@
 
       function loadTransactions() {
         return PB.transactions().then(function (data) {
-          renderTransactions(data.transactions || []);
+          var items = data.transactions || [];
+          renderStats(items);
+          renderTransactions(items);
         }).catch(function (err) {
           txList.textContent = "";
           var e = document.createElement("div");
