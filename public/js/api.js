@@ -74,6 +74,12 @@
     me: function () {
       return request("GET", "/auth/me");
     },
+    transactions: function () {
+      return request("GET", "/transactions");
+    },
+    demoTransaction: function (data) {
+      return request("POST", "/transactions/demo", data);
+    },
     showAlert: showAlert,
     hideAlert: hideAlert,
     setLoading: setLoading,
