@@ -5,6 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard | PayBridge</title>
   <link rel="stylesheet" href="/css/app.css">
+  <style>
+    .tx-row { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #f1f5f9; }
+    .tx-row:last-child { border-bottom:0; }
+    .tx-left { min-width:0; }
+    .tx-desc { font-weight:600; font-size:14px; word-break:break-word; }
+    .tx-meta { font-size:12px; color:#64748b; word-break:break-all; }
+    .tx-right { text-align:right; flex-shrink:0; }
+    .tx-amt { font-weight:700; font-size:15px; }
+    .pill { display:inline-block; font-size:11px; font-weight:700; padding:2px 8px; border-radius:999px; margin-top:4px; }
+    .pill.SUCCESS { background:#f0fdf4; color:#16a34a; }
+    .pill.FAILED { background:#fef2f2; color:#dc2626; }
+    .pill.PENDING { background:#fffbeb; color:#d97706; }
+    .form-row { display:flex; flex-direction:column; gap:10px; }
+    .form-row select { width:100%; padding:12px 14px; font-size:16px; border:1px solid #cbd5e1; border-radius:10px; background:#fff; color:#1e293b; }
+    .empty { text-align:center; color:#64748b; padding:24px 8px; font-size:14px; }
+  </style>
 </head>
 <body>
   <header class="dash-top">
@@ -30,19 +46,38 @@
       <div class="dash-card">
         <span class="badge-test">Test Mode: असली पैसा नहीं</span>
         <h2 id="welcome">स्वागत है</h2>
-        <p class="sub" style="color:#64748b;margin:0">आपका Merchant खाता तैयार है।</p>
-      </div>
-
-      <div class="dash-card">
-        <h2>खाते की जानकारी</h2>
-        <div class="kv"><span>Business</span><span id="v-business"></span></div>
         <div class="kv"><span>Email</span><span id="v-email"></span></div>
         <div class="kv"><span>Merchant ID</span><span id="v-id"></span></div>
       </div>
 
       <div class="dash-card">
-        <h2>आगे आने वाला</h2>
-        <p style="margin:0;color:#64748b;font-size:14px">Transactions, Orders, Payment Links, API Keys और Webhooks अगले Phases में जुड़ेंगे। <strong>Coming soon</strong></p>
+        <h2>Demo Transaction जोड़ें</h2>
+        <p style="margin:0 0 12px;color:#64748b;font-size:14px">यह सिर्फ़ Test रिकॉर्ड है। कोई असली पैसा नहीं जाता।</p>
+        <div id="tx-alert" class="alert" role="alert"></div>
+        <form id="tx-form" class="form-row" novalidate>
+          <div class="field" style="margin:0">
+            <label for="tx-amount">रकम (रुपये)</label>
+            <input id="tx-amount" type="number" min="1" max="100000" step="1" inputmode="numeric" value="499">
+          </div>
+          <div class="field" style="margin:0">
+            <label for="tx-desc">विवरण</label>
+            <input id="tx-desc" type="text" maxlength="100" value="Demo Test Payment">
+          </div>
+          <div class="field" style="margin:0">
+            <label for="tx-status">Test नतीजा</label>
+            <select id="tx-status">
+              <option value="SUCCESS">SUCCESS</option>
+              <option value="FAILED">FAILED</option>
+              <option value="PENDING">PENDING</option>
+            </select>
+          </div>
+          <button id="tx-submit" class="btn" type="submit">Demo Transaction जोड़ें</button>
+        </form>
+      </div>
+
+      <div class="dash-card">
+        <h2>Transactions (Test)</h2>
+        <div id="tx-list"></div>
       </div>
     </div>
   </main>
@@ -54,15 +89,81 @@
       var content = document.getElementById("content");
       var errorBox = document.getElementById("error");
       var logoutBtn = document.getElementById("logout");
+      var txList = document.getElementById("tx-list");
+      var txAlert = document.getElementById("tx-alert");
+      var txForm = document.getElementById("tx-form");
+      var txSubmit = document.getElementById("tx-submit");
+
+      function formatAmount(paise) {
+        return "\u20B9" + (paise / 100).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function formatTime(ts) {
+        return new Date(ts * 1000).toLocaleString("en-IN");
+      }
+
+      function renderTransactions(items) {
+        txList.textContent = "";
+        if (!items.length) {
+          var empty = document.createElement("div");
+          empty.className = "empty";
+          empty.textContent = "अभी कोई Transaction नहीं। ऊपर से Demo Transaction जोड़ें।";
+          txList.appendChild(empty);
+          return;
+        }
+        items.forEach(function (t) {
+          var row = document.createElement("div");
+          row.className = "tx-row";
+
+          var left = document.createElement("div");
+          left.className = "tx-left";
+          var d = document.createElement("div");
+          d.className = "tx-desc";
+          d.textContent = t.description || "Test Payment";
+          var m = document.createElement("div");
+          m.className = "tx-meta";
+          m.textContent = t.id + " \u00B7 " + formatTime(t.created_at);
+          left.appendChild(d);
+          left.appendChild(m);
+
+          var right = document.createElement("div");
+          right.className = "tx-right";
+          var a = document.createElement("div");
+          a.className = "tx-amt";
+          a.textContent = formatAmount(t.amount);
+          var p = document.createElement("span");
+          var st = ["SUCCESS", "FAILED", "PENDING"].indexOf(t.status) === -1 ? "PENDING" : t.status;
+          p.className = "pill " + st;
+          p.textContent = st + " (TEST)";
+          right.appendChild(a);
+          right.appendChild(p);
+
+          row.appendChild(left);
+          row.appendChild(right);
+          txList.appendChild(row);
+        });
+      }
+
+      function loadTransactions() {
+        return PB.transactions().then(function (data) {
+          renderTransactions(data.transactions || []);
+        }).catch(function (err) {
+          txList.textContent = "";
+          var e = document.createElement("div");
+          e.className = "empty";
+          e.textContent = err.message;
+          txList.appendChild(e);
+        });
+      }
 
       PB.me().then(function (data) {
         var m = data.merchant;
         document.getElementById("welcome").textContent = "स्वागत है, " + m.business_name;
-        document.getElementById("v-business").textContent = m.business_name;
         document.getElementById("v-email").textContent = m.email;
         document.getElementById("v-id").textContent = m.id;
         loading.style.display = "none";
         content.style.display = "block";
+        return loadTransactions();
       }).catch(function (err) {
         if (err.code === "UNAUTHENTICATED") {
           window.location.replace("/login.html");
@@ -70,6 +171,33 @@
         }
         loading.style.display = "none";
         PB.showAlert(errorBox, "error", err.message);
+      });
+
+      txForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        PB.hideAlert(txAlert);
+        var amount = Number(document.getElementById("tx-amount").value);
+        if (!isFinite(amount) || amount < 1 || amount > 100000) {
+          PB.showAlert(txAlert, "error", "रकम 1 से 1,00,000 रुपये के बीच डालें।");
+          return;
+        }
+        PB.setLoading(txSubmit, true, "जोड़ा जा रहा है...");
+        PB.demoTransaction({
+          amount: amount,
+          description: document.getElementById("tx-desc").value,
+          status: document.getElementById("tx-status").value
+        }).then(function () {
+          PB.setLoading(txSubmit, false);
+          PB.showAlert(txAlert, "success", "Test Transaction जुड़ गया।");
+          return loadTransactions();
+        }).catch(function (err) {
+          PB.setLoading(txSubmit, false);
+          if (err.code === "UNAUTHENTICATED") {
+            window.location.replace("/login.html");
+            return;
+          }
+          PB.showAlert(txAlert, "error", err.message);
+        });
       });
 
       logoutBtn.addEventListener("click", function () {
