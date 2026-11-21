@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login | PayBridge</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <main class="auth-wrap">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#7c3aed"/>
+        <path d="M7 20h18M7 20c0-6 4-9 9-9s9 3 9 9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+      </svg>
+      <span>PayBridge</span>
+    </div>
+
+    <div class="card">
+      <span class="badge-test">Test Mode: असली पैसा नहीं</span>
+      <h1>Login करें</h1>
+      <p class="sub">अपने Merchant खाते में प्रवेश करें।</p>
+
+      <div id="alert" class="alert" role="alert"></div>
+
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" maxlength="254" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" maxlength="128" autocomplete="current-password" required>
+        </div>
+        <button id="submit" class="btn" type="submit">Login</button>
+      </form>
+
+      <div class="links">
+        <p><a href="/forgot.html">Password भूल गए?</a></p>
+        <p>खाता नहीं है? <a href="/signup.html">खाता बनाएँ</a></p>
+        <p><a href="/">मुख्य पेज</a></p>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script>
+    (function () {
+      var form = document.getElementById("login-form");
+      var alertBox = document.getElementById("alert");
+      var button = document.getElementById("submit");
+
+      PB.me().then(function () {
+        window.location.replace("/app/dashboard.html");
+      }).catch(function () {});
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        PB.hideAlert(alertBox);
+
+        var data = {
+          email: document.getElementById("email").value,
+          password: document.getElementById("password").value
+        };
+
+        if (!data.email.trim() || !data.password) {
+          PB.showAlert(alertBox, "error", "Email और Password दोनों भरें।");
+          return;
+        }
+
+        PB.setLoading(button, true, "Login हो रहा है...");
+        PB.login(data).then(function () {
+          PB.showAlert(alertBox, "success", "Login सफल। Dashboard खुल रहा है...");
+          window.location.href = "/app/dashboard.html";
+        }).catch(function (err) {
+          PB.setLoading(button, false);
+          PB.showAlert(alertBox, "error", err.message);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
